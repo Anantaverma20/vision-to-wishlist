@@ -5,8 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Star, ExternalLink, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-// Mock product data - would come from affiliate APIs
+// Mock product data - would come from affiliate APIs based on user preferences
 const mockProducts = [
+  // Fashion & Style
   {
     id: 1,
     title: "Wireless Fitness Tracker",
@@ -21,82 +22,222 @@ const mockProducts = [
   },
   {
     id: 2,
-    title: "Sustainable Yoga Mat",
-    price: "$48.00",
-    originalPrice: "$65.00", 
+    title: "Chunky Knit Oversized Hoodie",
+    price: "$68.00",
+    originalPrice: "$85.00", 
     rating: 4.8,
     reviews: 1203,
-    image: "https://images.unsplash.com/photo-1506629905607-0e3dd3bb9e0e?w=400&h=400&fit=crop",
-    merchant: "REI",
-    category: "fitness",
-    tags: ["eco-friendly", "wellness", "minimalist"]
+    image: "https://images.unsplash.com/photo-1556821840-3a9c6dcdb61b?w=400&h=400&fit=crop",
+    merchant: "Urban Outfitters",
+    category: "fashion",
+    tags: ["cozy", "comfort", "trendy"]
   },
   {
     id: 3,
-    title: "Minimalist Travel Backpack",
+    title: "White Leather Sneakers",
     price: "$89.99",
     rating: 4.6,
     reviews: 892,
-    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop",
-    merchant: "Peak Design",
-    category: "travel",
-    tags: ["minimalist", "travel", "durable"]
+    image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=400&h=400&fit=crop",
+    merchant: "Adidas",
+    category: "fashion",
+    tags: ["minimalist", "shoes", "classic"]
   },
   {
     id: 4,
-    title: "Ceramic Plant Pot Set",
+    title: "Leather-bound Journal Set",
     price: "$34.99",
     rating: 4.4,
     reviews: 567,
-    image: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=400&h=400&fit=crop",
-    merchant: "West Elm",
-    category: "home",
-    tags: ["home-decor", "plants", "ceramic", "modern"]
+    image: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?w=400&h=400&fit=crop",
+    merchant: "Moleskine",
+    category: "stationery",
+    tags: ["writing", "planning", "elegant"]
   },
+  // Food & Drink
   {
     id: 5,
-    title: "Organic Cotton Oversized Sweater",
-    price: "$78.00",
-    originalPrice: "$95.00",
+    title: "Instant Ramen Variety Pack",
+    price: "$24.99",
+    originalPrice: "$32.00",
     rating: 4.7,
     reviews: 1456,
-    image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&h=400&fit=crop",
-    merchant: "Everlane",
-    category: "fashion",
-    tags: ["sustainable", "cozy", "minimalist"]
+    image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=400&fit=crop",
+    merchant: "Nongshim",
+    category: "food",
+    tags: ["comfort", "asian", "quick"]
   },
   {
     id: 6,
-    title: "Smart Water Bottle",
-    price: "$59.99",
+    title: "Bubble Tea Kit",
+    price: "$29.99",
     rating: 4.3,
     reviews: 743,
-    image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&h=400&fit=crop",
-    merchant: "Hydro Flask",
-    category: "fitness",
-    tags: ["hydration", "smart", "sustainable"]
+    image: "https://images.unsplash.com/photo-1525385133512-2f3bdd039054?w=400&h=400&fit=crop",
+    merchant: "Kung Fu Tea",
+    category: "drink",
+    tags: ["trendy", "sweet", "diy"]
   },
   {
     id: 7,
-    title: "Aromatherapy Diffuser",
+    title: "Premium Matcha Powder",
     price: "$42.50",
     rating: 4.6,
     reviews: 2103,
-    image: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=400&h=400&fit=crop",
-    merchant: "Vitruvi",
-    category: "home",
-    tags: ["wellness", "aromatherapy", "home-decor"]
+    image: "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?w=400&h=400&fit=crop",
+    merchant: "Ippodo Tea",
+    category: "drink",
+    tags: ["healthy", "traditional", "calming"]
   },
   {
     id: 8,
-    title: "Leather Crossbody Bag",
-    price: "$125.00",
+    title: "Aesthetic Pancake Mix",
+    price: "$18.00",
     rating: 4.5,
     reviews: 634,
+    image: "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=400&h=400&fit=crop",
+    merchant: "King Arthur",
+    category: "food", 
+    tags: ["breakfast", "sweet", "fluffy"]
+  },
+  // Lifestyle & Hobbies
+  {
+    id: 9,
+    title: "Cozy Reading Chair",
+    price: "$299.99",
+    originalPrice: "$399.99",
+    rating: 4.7,
+    reviews: 334,
+    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop",
+    merchant: "West Elm",
+    category: "home",
+    tags: ["reading", "comfort", "furniture"]
+  },
+  {
+    id: 10,
+    title: "Gaming Mechanical Keyboard",
+    price: "$149.99",
+    rating: 4.8,
+    reviews: 2456,
+    image: "https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=400&h=400&fit=crop",
+    merchant: "Razer",
+    category: "gaming",
+    tags: ["gaming", "tech", "rgb"]
+  },
+  {
+    id: 11,
+    title: "Wireless Dance Headphones",
+    price: "$79.99",
+    originalPrice: "$99.99",
+    rating: 4.4,
+    reviews: 876,
+    image: "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400&h=400&fit=crop",
+    merchant: "Sony",
+    category: "music",
+    tags: ["dancing", "wireless", "bass"]
+  },
+  {
+    id: 12,
+    title: "Beach Vacation Tote Bag",
+    price: "$45.00",
+    rating: 4.6,
+    reviews: 543,
     image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop",
-    merchant: "Madewell",
-    category: "fashion", 
-    tags: ["leather", "minimalist", "versatile"]
+    merchant: "L.L.Bean",
+    category: "travel",
+    tags: ["beach", "vacation", "summer"]
+  },
+  // Colors & Aesthetics
+  {
+    id: 13,
+    title: "Pink Aesthetic Room Decor Set",
+    price: "$89.99",
+    rating: 4.5,
+    reviews: 1234,
+    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop",
+    merchant: "IKEA",
+    category: "decor",
+    tags: ["pink", "aesthetic", "room"]
+  },
+  {
+    id: 14,
+    title: "Minimalist Black Desk Setup",
+    price: "$199.99",
+    originalPrice: "$249.99",
+    rating: 4.7,
+    reviews: 789,
+    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop",
+    merchant: "Herman Miller",
+    category: "workspace",
+    tags: ["black", "minimalist", "desk"]
+  },
+  {
+    id: 15,
+    title: "Green Plant Care Kit",
+    price: "$35.00",
+    rating: 4.3,
+    reviews: 567,
+    image: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=400&h=400&fit=crop",
+    merchant: "The Sill",
+    category: "plants",
+    tags: ["green", "plants", "care"]
+  },
+  // Animals & Seasons
+  {
+    id: 16,
+    title: "Dog Lover's Gift Set",
+    price: "$54.99",
+    rating: 4.8,
+    reviews: 445,
+    image: "https://images.unsplash.com/photo-1560807707-8cc77767d783?w=400&h=400&fit=crop",
+    merchant: "Chewy",
+    category: "pets",
+    tags: ["dog", "pets", "loyal"]
+  },
+  {
+    id: 17,
+    title: "Cat Café Subscription Box",
+    price: "$29.99",
+    rating: 4.6,
+    reviews: 678,
+    image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop",
+    merchant: "KitNipBox",
+    category: "pets",
+    tags: ["cat", "subscription", "graceful"]
+  },
+  {
+    id: 18,
+    title: "Spring Flowers Bouquet",
+    price: "$39.99",
+    rating: 4.4,
+    reviews: 234,
+    image: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=400&h=400&fit=crop",
+    merchant: "1-800-Flowers",
+    category: "flowers",
+    tags: ["spring", "fresh", "blooming"]
+  },
+  {
+    id: 19,
+    title: "Summer Beach Essentials Kit",
+    price: "$75.00",
+    originalPrice: "$95.00",
+    rating: 4.5,
+    reviews: 892,
+    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=400&fit=crop",
+    merchant: "Target",
+    category: "summer",
+    tags: ["summer", "beach", "vacation"]
+  },
+  {
+    id: 20,
+    title: "Autumn Cozy Candle Collection",
+    price: "$48.00",
+    rating: 4.7,
+    reviews: 567,
+    image: "https://images.unsplash.com/photo-1602874801091-2ca3ba6b8f5e?w=400&h=400&fit=crop",
+    merchant: "Bath & Body Works",
+    category: "candles",
+    tags: ["autumn", "cozy", "scented"]
   }
 ];
 

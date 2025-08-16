@@ -6,102 +6,179 @@ import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-// Mock image data - in real app would be from CMS/API
-const categories = [
+import colorPink from "@/assets/color-pink.jpg";
+import colorBlack from "@/assets/color-black.jpg";
+import colorGreen from "@/assets/color-green.jpg";
+import activityReading from "@/assets/activity-reading.jpg";
+import activityDancing from "@/assets/activity-dancing.jpg";
+import activityGaming from "@/assets/activity-gaming.jpg";
+import animalDog from "@/assets/animal-dog.jpg";
+import animalCat from "@/assets/animal-cat.jpg";
+import animalPanda from "@/assets/animal-panda.jpg";
+import seasonSpring from "@/assets/season-spring.jpg";
+import seasonSummer from "@/assets/season-summer.jpg";
+import seasonAutumn from "@/assets/season-autumn.jpg";
+
+// Questions and image options for the visual form
+const questions = [
   {
-    id: "fitness",
-    name: "Fitness & Wellness", 
+    id: "want",
+    title: "What do you want right now?",
+    emoji: "✨",
     color: "bg-soft-mint",
-    images: [
-      "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1540569876979-df919b7c1d70?w=400&h=300&fit=crop", 
-      "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1506629905607-0e3dd3bb9e0e?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1593079831268-3381b0db4a77?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop"
+    options: [
+      { label: "New shoes", image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=400&h=300&fit=crop", tags: ["fashion", "footwear", "style"] },
+      { label: "Cozy hoodie", image: "https://images.unsplash.com/photo-1556821840-3a9c6dcdb61b?w=400&h=300&fit=crop", tags: ["clothing", "comfort", "casual"] },
+      { label: "A notebook", image: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?w=400&h=300&fit=crop", tags: ["stationery", "planning", "creative"] },
+      { label: "Tech gadget", image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&h=300&fit=crop", tags: ["technology", "gadgets", "modern"] },
+      { label: "Jewelry", image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=300&fit=crop", tags: ["accessories", "jewelry", "elegant"] },
+      { label: "Skincare", image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=300&fit=crop", tags: ["beauty", "skincare", "wellness"] }
     ]
   },
   {
-    id: "travel",
-    name: "Travel & Adventure",
-    color: "bg-soft-sky", 
-    images: [
-      "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1502780402662-acc01917cf4a?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=400&h=300&fit=crop", 
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=400&h=300&fit=crop"
-    ]
-  },
-  {
-    id: "home",
-    name: "Home & Living",
+    id: "eat", 
+    title: "What do you want to eat now?",
+    emoji: "🍜",
     color: "bg-soft-peach",
-    images: [
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1522444195799-478538b28823?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1571508601205-de58ff9b9bce?w=400&h=300&fit=crop"
+    options: [
+      { label: "Ramen", image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop", tags: ["food", "comfort", "asian"] },
+      { label: "Pancakes", image: "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=400&h=300&fit=crop", tags: ["breakfast", "sweet", "comfort"] },
+      { label: "Something sweet", image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=300&fit=crop", tags: ["dessert", "sweet", "indulgent"] },
+      { label: "Healthy salad", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop", tags: ["healthy", "fresh", "vegetables"] },
+      { label: "Pizza", image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop", tags: ["comfort", "social", "indulgent"] },
+      { label: "Sushi", image: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop", tags: ["healthy", "asian", "fresh"] }
     ]
   },
   {
-    id: "fashion",
-    name: "Fashion & Style", 
+    id: "drink",
+    title: "What do you want to drink now?",
+    emoji: "🧋",
+    color: "bg-soft-lavender", 
+    options: [
+      { label: "Bubble tea", image: "https://images.unsplash.com/photo-1525385133512-2f3bdd039054?w=400&h=300&fit=crop", tags: ["sweet", "trendy", "social"] },
+      { label: "Iced coffee", image: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=300&fit=crop", tags: ["coffee", "energy", "cold"] },
+      { label: "Matcha latte", image: "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?w=400&h=300&fit=crop", tags: ["healthy", "trendy", "calming"] },
+      { label: "Smoothie", image: "https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=400&h=300&fit=crop", tags: ["healthy", "fresh", "vitamins"] },
+      { label: "Tea", image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=300&fit=crop", tags: ["calming", "traditional", "warm"] },
+      { label: "Energy drink", image: "https://images.unsplash.com/photo-1553282195-a4dd3d960735?w=400&h=300&fit=crop", tags: ["energy", "active", "boost"] }
+    ]
+  },
+  {
+    id: "go",
+    title: "Where do you want to go now?",
+    emoji: "🌅",
+    color: "bg-soft-sky",
+    options: [
+      { label: "The beach", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop", tags: ["nature", "relaxing", "vacation"] },
+      { label: "A quiet café", image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&h=300&fit=crop", tags: ["cozy", "peaceful", "social"] },
+      { label: "A cool event", image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&h=300&fit=crop", tags: ["exciting", "social", "entertainment"] },
+      { label: "The mountains", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop", tags: ["nature", "adventure", "peaceful"] },
+      { label: "Art museum", image: "https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=400&h=300&fit=crop", tags: ["culture", "inspiration", "art"] },
+      { label: "Shopping mall", image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop", tags: ["shopping", "social", "variety"] }
+    ]
+  },
+  {
+    id: "color",
+    title: "What's your favorite color?",
+    emoji: "🎨",
+    color: "bg-soft-mint",
+    options: [
+      { label: "Pink", image: colorPink, tags: ["soft", "feminine", "playful"] },
+      { label: "Black", image: colorBlack, tags: ["elegant", "minimalist", "classic"] },
+      { label: "Green", image: colorGreen, tags: ["natural", "calming", "fresh"] },
+      { label: "Blue", image: "https://images.unsplash.com/photo-1557683316-973673baf926?w=400&h=300&fit=crop", tags: ["calming", "trustworthy", "peaceful"] },
+      { label: "Purple", image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=300&fit=crop", tags: ["creative", "mystical", "luxurious"] },
+      { label: "Yellow", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop", tags: ["bright", "happy", "energetic"] }
+    ]
+  },
+  {
+    id: "activity",
+    title: "What do you love to do?",
+    emoji: "💫",
+    color: "bg-soft-peach",
+    options: [
+      { label: "Reading", image: activityReading, tags: ["intellectual", "quiet", "learning"] },
+      { label: "Dancing", image: activityDancing, tags: ["active", "expressive", "joyful"] },
+      { label: "Playing games", image: activityGaming, tags: ["fun", "competitive", "strategic"] },
+      { label: "Traveling", image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400&h=300&fit=crop", tags: ["adventure", "cultural", "exploration"] },
+      { label: "Cooking", image: "https://images.unsplash.com/photo-1556909114-4f6e9d313e36?w=400&h=300&fit=crop", tags: ["creative", "nurturing", "skills"] },
+      { label: "Sports", image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop", tags: ["active", "competitive", "health"] }
+    ]
+  },
+  {
+    id: "animal",
+    title: "What's your favorite animal?",
+    emoji: "🐾",
     color: "bg-soft-lavender",
-    images: [
-      "https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1566479179817-bea0b1d0c1b6?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1490427712608-588e68359dbd?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1516762689617-e1cffcef479d?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400&h=300&fit=crop"
+    options: [
+      { label: "Dog", image: animalDog, tags: ["loyal", "friendly", "energetic"] },
+      { label: "Cat", image: animalCat, tags: ["independent", "graceful", "calm"] },
+      { label: "Panda", image: animalPanda, tags: ["gentle", "peaceful", "adorable"] },
+      { label: "Dolphin", image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=300&fit=crop", tags: ["intelligent", "playful", "social"] },
+      { label: "Butterfly", image: "https://images.unsplash.com/photo-1558443957-60cd63c9ec9d?w=400&h=300&fit=crop", tags: ["transformation", "delicate", "beautiful"] },
+      { label: "Wolf", image: "https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=400&h=300&fit=crop", tags: ["wild", "strong", "independent"] }
+    ]
+  },
+  {
+    id: "season",
+    title: "What's your favorite season?",
+    emoji: "🌸",
+    color: "bg-soft-sky",
+    options: [
+      { label: "Spring", image: seasonSpring, tags: ["renewal", "fresh", "blooming"] },
+      { label: "Summer", image: seasonSummer, tags: ["warm", "vacation", "energy"] },
+      { label: "Autumn", image: seasonAutumn, tags: ["cozy", "nostalgic", "transformation"] },
+      { label: "Winter", image: "https://images.unsplash.com/photo-1516715094483-75da06558971?w=400&h=300&fit=crop", tags: ["peaceful", "minimalist", "reflection"] }
+    ]
+  },
+  {
+    id: "aesthetic",
+    title: "Do you have a favorite character or aesthetic?",
+    emoji: "✨",
+    color: "bg-soft-mint",
+    options: [
+      { label: "Ghibli", image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop", tags: ["whimsical", "nature", "dreamy"] },
+      { label: "Sanrio", image: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=300&fit=crop", tags: ["cute", "kawaii", "colorful"] },
+      { label: "K-pop", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop", tags: ["trendy", "colorful", "modern"] },
+      { label: "Vintage", image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=300&fit=crop", tags: ["nostalgic", "classic", "timeless"] },
+      { label: "Minimalist", image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop", tags: ["clean", "simple", "modern"] },
+      { label: "Dark academia", image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=300&fit=crop", tags: ["intellectual", "classic", "scholarly"] }
     ]
   }
 ];
 
 const VisualForm = () => {
-  const [currentCategory, setCurrentCategory] = useState(0);
-  const [selections, setSelections] = useState<Record<string, string[]>>({});
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selections, setSelections] = useState<Record<string, any[]>>({});
   const navigate = useNavigate();
 
-  const handleImageSelect = (imageUrl: string) => {
-    const categoryId = categories[currentCategory].id;
-    const currentSelections = selections[categoryId] || [];
+  const handleOptionSelect = (option: any) => {
+    const questionId = questions[currentQuestion].id;
+    const currentSelections = selections[questionId] || [];
     
-    if (currentSelections.includes(imageUrl)) {
+    if (currentSelections.some(sel => sel.label === option.label)) {
       // Remove selection
       setSelections(prev => ({
         ...prev,
-        [categoryId]: currentSelections.filter(url => url !== imageUrl)
+        [questionId]: currentSelections.filter(sel => sel.label !== option.label)
       }));
-    } else if (currentSelections.length < 3) {
-      // Add selection (max 3)
+    } else if (currentSelections.length < 2) {
+      // Add selection (max 2 per question)
       setSelections(prev => ({
         ...prev,
-        [categoryId]: [...currentSelections, imageUrl]
+        [questionId]: [...currentSelections, option]
       }));
     } else {
-      toast.error("You can select up to 3 images per category");
+      toast.error("You can select up to 2 options per question");
     }
   };
 
-  const currentSelections = selections[categories[currentCategory].id] || [];
+  const currentSelections = selections[questions[currentQuestion].id] || [];
   const canProceed = Object.keys(selections).length > 0;
 
   const handleNext = () => {
-    if (currentCategory < categories.length - 1) {
-      setCurrentCategory(currentCategory + 1);
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
     } else {
       // Store selections in localStorage for now
       localStorage.setItem('visionBoardSelections', JSON.stringify(selections));
@@ -124,7 +201,7 @@ const VisualForm = () => {
           <div className="text-center">
             <h1 className="text-xl font-semibold">Create Your Vision Board</h1>
             <p className="text-sm text-muted-foreground">
-              Category {currentCategory + 1} of {categories.length} • {totalSelected} images selected
+              Question {currentQuestion + 1} of {questions.length} • {totalSelected} selections made
             </p>
           </div>
 
@@ -142,45 +219,49 @@ const VisualForm = () => {
       <div className="w-full bg-secondary h-1">
         <div 
           className="h-full bg-gradient-to-r from-primary to-accent-coral transition-all duration-500"
-          style={{ width: `${((currentCategory + 1) / categories.length) * 100}%` }}
+          style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
         />
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* Category Header */}
+        {/* Question Header */}
         <div className="text-center mb-8">
-          <Badge variant="secondary" className={`${categories[currentCategory].color} mb-4 px-4 py-2 text-sm font-medium`}>
-            {categories[currentCategory].name}
+          <div className="text-4xl mb-4">{questions[currentQuestion].emoji}</div>
+          <Badge variant="secondary" className={`${questions[currentQuestion].color} mb-4 px-4 py-2 text-sm font-medium`}>
+            💛 Your Favorites
           </Badge>
           <h2 className="text-2xl font-bold mb-2">
-            What resonates with your {categories[currentCategory].name.toLowerCase()} vision?
+            {questions[currentQuestion].title}
           </h2>
           <p className="text-muted-foreground">
-            Select 2-3 images that capture your aspirations (current: {currentSelections.length}/3)
+            Choose up to 2 options that speak to you (current: {currentSelections.length}/2)
           </p>
         </div>
 
-        {/* Image Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {categories[currentCategory].images.map((imageUrl, index) => {
-            const isSelected = currentSelections.includes(imageUrl);
+        {/* Options Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+          {questions[currentQuestion].options.map((option, index) => {
+            const isSelected = currentSelections.some(sel => sel.label === option.label);
             return (
               <Card 
                 key={index}
                 className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 ${
                   isSelected ? 'ring-2 ring-primary shadow-lg' : 'hover:shadow-lg'
                 }`}
-                onClick={() => handleImageSelect(imageUrl)}
+                onClick={() => handleOptionSelect(option)}
               >
                 <img 
-                  src={imageUrl} 
-                  alt={`${categories[currentCategory].name} option ${index + 1}`}
+                  src={option.image} 
+                  alt={option.label}
                   className="w-full aspect-[4/3] object-cover"
                 />
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+                  <p className="text-white font-medium text-sm">{option.label}</p>
+                </div>
                 {isSelected && (
-                  <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
-                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                      <Check className="w-5 h-5 text-white" />
+                  <div className="absolute top-2 right-2">
+                    <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                      <Check className="w-4 h-4 text-white" />
                     </div>
                   </div>
                 )}
@@ -193,19 +274,19 @@ const VisualForm = () => {
         <div className="flex justify-between items-center">
           <Button 
             variant="outline" 
-            onClick={() => setCurrentCategory(Math.max(0, currentCategory - 1))}
-            disabled={currentCategory === 0}
+            onClick={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))}
+            disabled={currentQuestion === 0}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Previous
           </Button>
 
           <div className="flex gap-2">
-            {categories.map((_, index) => (
+            {questions.map((_, index) => (
               <div 
                 key={index}
                 className={`w-2 h-2 rounded-full transition-colors ${
-                  index <= currentCategory ? 'bg-primary' : 'bg-muted'
+                  index <= currentQuestion ? 'bg-primary' : 'bg-muted'
                 }`}
               />
             ))}
@@ -216,7 +297,7 @@ const VisualForm = () => {
             onClick={handleNext}
             disabled={currentSelections.length === 0}
           >
-            {currentCategory === categories.length - 1 ? 'Create Board' : 'Next'}
+            {currentQuestion === questions.length - 1 ? 'Create Board' : 'Next'}
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </div>
