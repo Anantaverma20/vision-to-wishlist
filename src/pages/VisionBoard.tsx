@@ -249,26 +249,71 @@ const VisionBoard = () => {
                 </div>
               </div>
             ) : (
-              /* Pinterest-style masonry grid */
-              <div className="columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 space-y-4">
-                {displayImages.map((image, index) => (
-                  <div 
-                    key={index}
-                    className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 cursor-move break-inside-avoid mb-4"
-                  >
-                    <img 
-                      src={image} 
-                      alt={`AI Vision ${index + 1}`}
-                      className="w-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      style={{ aspectRatio: `${Math.random() > 0.5 ? '4/5' : '4/3'}` }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <Move className="absolute top-2 right-2 w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-lg" />
-                    <div className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Sparkles className="w-4 h-4 text-white drop-shadow-lg" />
+              /* Overlapping collage-style vision board */
+              <div className="relative w-full h-[800px] md:h-[900px] lg:h-[1000px] overflow-hidden">
+                {displayImages.slice(0, 20).map((image, index) => {
+                  // Predefined positions for overlapping collage effect
+                  const positions = [
+                    { top: '5%', left: '10%', width: '200px', height: '250px', rotation: '-3deg', zIndex: 10 },
+                    { top: '8%', left: '35%', width: '180px', height: '220px', rotation: '2deg', zIndex: 15 },
+                    { top: '2%', right: '15%', width: '160px', height: '200px', rotation: '-1deg', zIndex: 12 },
+                    { top: '25%', left: '5%', width: '220px', height: '160px', rotation: '1deg', zIndex: 8 },
+                    { top: '22%', left: '45%', width: '190px', height: '240px', rotation: '-2deg', zIndex: 20 },
+                    { top: '15%', right: '8%', width: '170px', height: '210px', rotation: '3deg', zIndex: 14 },
+                    { top: '45%', left: '15%', width: '160px', height: '200px', rotation: '-4deg', zIndex: 16 },
+                    { top: '40%', left: '60%', width: '200px', height: '150px', rotation: '1deg', zIndex: 11 },
+                    { top: '35%', right: '12%', width: '180px', height: '230px', rotation: '-1deg', zIndex: 18 },
+                    { top: '65%', left: '8%', width: '190px', height: '170px', rotation: '2deg', zIndex: 13 },
+                    { top: '60%', left: '40%', width: '170px', height: '220px', rotation: '-3deg', zIndex: 17 },
+                    { top: '55%', right: '20%', width: '200px', height: '160px', rotation: '1deg', zIndex: 9 },
+                    { top: '78%', left: '12%', width: '160px', height: '200px', rotation: '-1deg', zIndex: 19 },
+                    { top: '75%', left: '50%', width: '180px', height: '180px', rotation: '3deg', zIndex: 15 },
+                    { top: '70%', right: '8%', width: '170px', height: '210px', rotation: '-2deg', zIndex: 12 },
+                    { top: '10%', left: '60%', width: '150px', height: '190px', rotation: '2deg', zIndex: 7 },
+                    { top: '30%', left: '25%', width: '140px', height: '170px', rotation: '-1deg', zIndex: 6 },
+                    { top: '50%', left: '75%', width: '160px', height: '200px', rotation: '4deg', zIndex: 14 },
+                    { top: '85%', left: '30%', width: '190px', height: '140px', rotation: '-2deg', zIndex: 10 },
+                    { top: '88%', right: '25%', width: '170px', height: '160px', rotation: '1deg', zIndex: 8 }
+                  ];
+                  
+                  const position = positions[index] || positions[index % positions.length];
+                  
+                  return (
+                    <div 
+                      key={index}
+                      className="group absolute cursor-move transition-all duration-300 hover:scale-105 hover:z-50"
+                      style={{
+                        top: position.top,
+                        left: position.left,
+                        right: position.right,
+                        width: position.width,
+                        height: position.height,
+                        transform: `rotate(${position.rotation})`,
+                        zIndex: position.zIndex
+                      }}
+                    >
+                      <div className="relative w-full h-full overflow-hidden rounded-lg shadow-lg group-hover:shadow-2xl transition-all duration-300 bg-white p-2">
+                        <img 
+                          src={image} 
+                          alt={`Vision ${index + 1}`}
+                          className="w-full h-full object-cover rounded-md transition-transform duration-300 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md" />
+                        <Move className="absolute top-1 right-1 w-3 h-3 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-lg" />
+                        <div className="absolute bottom-1 left-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <Sparkles className="w-3 h-3 text-white drop-shadow-lg" />
+                        </div>
+                      </div>
                     </div>
+                  );
+                })}
+                
+                {/* Central year overlay */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="text-6xl md:text-8xl lg:text-9xl font-bold text-white/90 drop-shadow-2xl z-30">
+                    2025
                   </div>
-                ))}
+                </div>
               </div>
             )}
           </Card>
