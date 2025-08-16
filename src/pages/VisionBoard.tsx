@@ -19,12 +19,10 @@ const VisionBoard = () => {
     if (saved) {
       const parsed = JSON.parse(saved);
       setSelections(parsed);
-      // Flatten all selected option images  
+      // Use user-selected images from the form  
       const allImages = Object.values(parsed).flat().map((option: any) => option.image);
       setBoardImages(allImages);
-      
-      // Auto-generate AI vision board
-      generateAIVisionBoard(parsed);
+      setGeneratedBoard(allImages); // Use user selections as the board
     } else {
       navigate('/visual-form');
     }
@@ -74,98 +72,7 @@ const VisionBoard = () => {
     return [...new Set(tags)]; // Remove duplicates
   };
 
-  const generateAIVisionBoard = async (userSelections: Record<string, any[]>) => {
-    setIsGenerating(true);
-    try {
-      const styleTags = getStyleTags(userSelections);
-      
-      // Generate prompts based on user's actual selections
-      const prompts = [
-        `A beautiful ${styleTags.slice(0, 4).join(", ")} lifestyle scene, high quality, inspiring`,
-        `Elegant ${styleTags.slice(0, 3).join(", ")} aesthetic mood board style, clean composition`,
-        `Aspirational ${styleTags.slice(2, 5).join(", ")} vision, dreamy atmosphere, soft lighting`,
-        
-        // Category-specific images based on selections
-        ...(userSelections.want ? [
-          "Stylish modern lifestyle items arranged aesthetically",
-          "Beautiful minimalist product photography setup"
-        ] : []),
-        
-        ...(userSelections.eat ? [
-          "Healthy colorful food photography, clean eating lifestyle",
-          "Aesthetic food flat lay with natural lighting"
-        ] : []),
-        
-        ...(userSelections.drink ? [
-          "Beautiful beverage photography with natural elements",
-          "Cozy café scene with aesthetic drinks"
-        ] : []),
-        
-        ...(userSelections.go ? [
-          "Inspiring travel and adventure destinations",
-          "Beautiful peaceful places for relaxation"
-        ] : []),
-        
-        ...(userSelections.color ? [
-          "Color-coordinated aesthetic lifestyle photography",
-          "Beautiful color palette inspiration"
-        ] : []),
-        
-        ...(userSelections.activity ? [
-          "Active lifestyle and hobby inspiration",
-          "Creative workspace and activity setups"
-        ] : []),
-        
-        // Universal inspiration images
-        "Inspirational quote in beautiful typography, motivation",
-        "Golden hour nature scene with warm light, peaceful vibes",
-        "Artistic workspace with creative tools, productivity inspiration",
-        "Beautiful flowers in soft natural light, beauty and growth",
-        "Cozy reading nook with books and warm lighting, self-care",
-        "Luxury spa setup with candles and peaceful ambiance"
-      ];
-
-      // Simulate AI generation delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // For demo, use curated images that match user preferences
-      const generatedImages = [
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1540569876979-df919b7c1d70?w=600&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1445205170230-053b83016050?w=500&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1502780402662-acc01917cf4a?w=500&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=400&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1566479179817-bea0b1d0c1b6?w=600&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=500&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1506629905607-0e3dd3bb9e0e?w=400&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=400&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1490427712608-588e68359dbd?w=600&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1593079831268-3381b0db4a77?w=400&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=500&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=400&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=600&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&h=600&fit=crop",
-        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=500&h=400&fit=crop"
-      ];
-      
-      setGeneratedBoard(generatedImages);
-      setShowFeedback(true); // Show feedback after generation
-      toast.success("AI Vision Board generated successfully!");
-    } catch (error) {
-      console.error("Error generating vision board:", error);
-      toast.error("Failed to generate AI vision board");
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+  // Remove the AI generation function since we're using user selections directly
 
   const handleShare = () => {
     if (navigator.share) {
@@ -255,20 +162,11 @@ const VisionBoard = () => {
           
           <div className="text-center">
             <h1 className="text-xl font-semibold flex items-center justify-center gap-2">
-              {isGenerating ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Generating AI Vision Board
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-5 h-5 text-primary" />
-                  Your AI Vision Board
-                </>
-              )}
+              <Sparkles className="w-5 h-5 text-primary" />
+              Your Vision Board
             </h1>
             <p className="text-sm text-muted-foreground">
-              {isGenerating ? "Creating personalized vision..." : `${displayImages.length} curated images • AI generated`}
+              {displayImages.length} personalized images • Based on your choices
             </p>
           </div>
 
@@ -293,7 +191,7 @@ const VisionBoard = () => {
               Your Personal Vision Board
             </h2>
             <p className="text-center text-muted-foreground mb-6">
-              AI-curated based on your preferences • Drag to reorder
+              Based on your personal preferences • Drag to reorder
             </p>
             
             {isGenerating ? (
@@ -305,11 +203,26 @@ const VisionBoard = () => {
                 </div>
               </div>
             ) : (
-              /* Overlapping collage-style vision board */
-              <div className="relative w-full h-[800px] md:h-[900px] lg:h-[1000px] overflow-hidden">
-                {displayImages.slice(0, 20).map((image, index) => {
-                  // Predefined positions for overlapping collage effect
-                  const positions = [
+              /* Mobile-optimized collage-style vision board */
+              <div className="relative w-full h-[500px] sm:h-[600px] md:h-[800px] lg:h-[1000px] overflow-hidden">
+                {displayImages.slice(0, 12).map((image, index) => {
+                  // Mobile-optimized positions for overlapping collage effect
+                  const mobilePositions = [
+                    { top: '5%', left: '5%', width: '120px', height: '150px', rotation: '-2deg', zIndex: 10 },
+                    { top: '10%', right: '10%', width: '100px', height: '130px', rotation: '3deg', zIndex: 15 },
+                    { top: '25%', left: '15%', width: '140px', height: '110px', rotation: '1deg', zIndex: 8 },
+                    { top: '20%', right: '5%', width: '110px', height: '140px', rotation: '-1deg', zIndex: 12 },
+                    { top: '40%', left: '8%', width: '120px', height: '160px', rotation: '2deg', zIndex: 16 },
+                    { top: '35%', right: '15%', width: '130px', height: '100px', rotation: '-3deg', zIndex: 14 },
+                    { top: '55%', left: '20%', width: '110px', height: '140px', rotation: '1deg', zIndex: 11 },
+                    { top: '50%', right: '8%', width: '125px', height: '120px', rotation: '-2deg', zIndex: 18 },
+                    { top: '70%', left: '5%', width: '140px', height: '110px', rotation: '2deg', zIndex: 13 },
+                    { top: '65%', right: '20%', width: '115px', height: '145px', rotation: '-1deg', zIndex: 17 },
+                    { top: '80%', left: '25%', width: '120px', height: '130px', rotation: '3deg', zIndex: 9 },
+                    { top: '75%', right: '5%', width: '130px', height: '120px', rotation: '-2deg', zIndex: 19 }
+                  ];
+
+                  const desktopPositions = [
                     { top: '5%', left: '10%', width: '200px', height: '250px', rotation: '-3deg', zIndex: 10 },
                     { top: '8%', left: '35%', width: '180px', height: '220px', rotation: '2deg', zIndex: 15 },
                     { top: '2%', right: '15%', width: '160px', height: '200px', rotation: '-1deg', zIndex: 12 },
@@ -332,6 +245,7 @@ const VisionBoard = () => {
                     { top: '88%', right: '25%', width: '170px', height: '160px', rotation: '1deg', zIndex: 8 }
                   ];
                   
+                  const positions = window.innerWidth < 768 ? mobilePositions : desktopPositions;
                   const position = positions[index] || positions[index % positions.length];
                   
                   return (
@@ -348,7 +262,7 @@ const VisionBoard = () => {
                         zIndex: position.zIndex
                       }}
                     >
-                      <div className="relative w-full h-full overflow-hidden rounded-lg shadow-lg group-hover:shadow-2xl transition-all duration-300 bg-white p-2">
+                      <div className="relative w-full h-full overflow-hidden rounded-lg shadow-lg group-hover:shadow-2xl transition-all duration-300 bg-white p-1 sm:p-2">
                         <img 
                           src={image} 
                           alt={`Vision ${index + 1}`}
@@ -364,9 +278,9 @@ const VisionBoard = () => {
                   );
                 })}
                 
-                {/* Central year overlay */}
+                {/* Central year overlay - mobile responsive */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="text-6xl md:text-8xl lg:text-9xl font-bold text-white/90 drop-shadow-2xl z-30">
+                  <div className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-bold text-white/90 drop-shadow-2xl z-30">
                     2025
                   </div>
                 </div>
@@ -375,48 +289,38 @@ const VisionBoard = () => {
           </Card>
         </div>
 
-        {/* Feedback Modal */}
-        {showFeedback && !isGenerating && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <Card className="p-8 max-w-md w-full text-center bg-white">
-              <div className="mb-6">
-                <Sparkles className="w-16 h-16 text-primary mx-auto mb-4" />
-                <h3 className="text-2xl font-bold mb-2">How do you like your vision board?</h3>
-                <p className="text-muted-foreground">Your feedback helps us improve our AI generation</p>
+        {/* Feedback Section - Below Vision Board */}
+        {!isGenerating && !userFeedback && (
+          <Card className="p-6 mb-8 bg-gradient-to-r from-soft-lavender/20 to-soft-sky/20">
+            <div className="text-center">
+              <div className="mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Sparkles className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold mb-1">How do you like your vision board?</h3>
+                <p className="text-muted-foreground text-sm">Your feedback helps us improve your experience</p>
               </div>
               
-              <div className="flex gap-6 justify-center">
+              <div className="flex gap-3 justify-center items-center">
                 <Button
-                  variant="outline"
-                  size="lg"
                   onClick={() => handleFeedback(true)}
-                  className="flex-col h-auto py-4 px-8 hover:bg-green-50 hover:border-green-300"
-                >
-                  <span className="text-4xl mb-2">👍</span>
-                  <span className="text-sm font-medium">Love it!</span>
-                </Button>
-                
-                <Button
+                  className="h-12 px-6"
                   variant="outline"
-                  size="lg"
-                  onClick={() => handleFeedback(false)}
-                  className="flex-col h-auto py-4 px-8 hover:bg-red-50 hover:border-red-300"
                 >
-                  <span className="text-4xl mb-2">👎</span>
-                  <span className="text-sm font-medium">Not quite</span>
+                  <span className="mr-2 text-xl">👍</span>
+                  Love it!
+                </Button>
+                <Button
+                  onClick={() => handleFeedback(false)}
+                  className="h-12 px-6"
+                  variant="outline"
+                >
+                  <span className="mr-2 text-xl">👎</span>
+                  Not quite
                 </Button>
               </div>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowFeedback(false)}
-                className="mt-4 text-muted-foreground"
-              >
-                Skip feedback
-              </Button>
-            </Card>
-          </div>
+            </div>
+          </Card>
         )}
 
         {/* Categories Summary */}
