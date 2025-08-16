@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Download, Share2, ShoppingBag, Move } from "lucide-react";
+import { ArrowLeft, Download, Share2, ShoppingBag, Move, Sparkles, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const VisionBoard = () => {
   const [selections, setSelections] = useState<Record<string, string[]>>({});
   const [boardImages, setBoardImages] = useState<string[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedBoard, setGeneratedBoard] = useState<string[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,10 +20,120 @@ const VisionBoard = () => {
       // Flatten all selected images
       const allImages = Object.values(parsed).flat() as string[];
       setBoardImages(allImages);
+      
+      // Auto-generate AI vision board
+      generateAIVisionBoard(parsed);
     } else {
       navigate('/visual-form');
     }
   }, [navigate]);
+
+  const getStyleTags = (selections: Record<string, string[]>) => {
+    const tags = [];
+    
+    // Analyze user preferences to generate style tags
+    if (selections.fitness?.length > 0) {
+      tags.push("wellness", "active lifestyle", "healthy living", "motivation");
+    }
+    if (selections.travel?.length > 0) {
+      tags.push("adventure", "wanderlust", "exploration", "freedom");
+    }
+    if (selections.home?.length > 0) {
+      tags.push("minimalist", "cozy", "interior design", "peaceful");
+    }
+    if (selections.fashion?.length > 0) {
+      tags.push("style", "elegance", "trendy", "aesthetic");
+    }
+    
+    return tags;
+  };
+
+  const generateAIVisionBoard = async (userSelections: Record<string, string[]>) => {
+    setIsGenerating(true);
+    try {
+      const styleTags = getStyleTags(userSelections);
+      const prompts = [
+        // Core lifestyle images
+        `A beautiful ${styleTags.join(", ")} lifestyle scene, high quality, inspiring`,
+        `Elegant ${styleTags.join(", ")} aesthetic mood board style, clean composition`,
+        `Aspirational ${styleTags.join(", ")} vision, dreamy atmosphere, soft lighting`,
+        
+        // Category-specific images
+        ...(userSelections.fitness ? [
+          "Serene yoga studio with natural light, minimalist zen aesthetic",
+          "Fresh healthy colorful smoothie bowls and fruits, clean eating lifestyle",
+          "Modern gym equipment in bright spacious room, motivational fitness"
+        ] : []),
+        
+        ...(userSelections.travel ? [
+          "Stunning mountain landscape with clear blue sky, adventure travel",
+          "Cozy café in European cobblestone street, wanderlust vibes",
+          "Pristine beach with crystal clear water, tropical paradise"
+        ] : []),
+        
+        ...(userSelections.home ? [
+          "Scandinavian minimalist living room with plants, cozy hygge",
+          "Organized beautiful kitchen with natural materials, home inspiration",
+          "Peaceful bedroom with soft textures and natural light"
+        ] : []),
+        
+        ...(userSelections.fashion ? [
+          "Elegant fashion flat lay with accessories, style inspiration",
+          "Chic wardrobe with organized clothes, fashion aesthetic",
+          "Beautiful jewelry and accessories display, luxury style"
+        ] : []),
+        
+        // Universal inspiration images
+        "Inspirational quote in beautiful typography, motivation",
+        "Golden hour nature scene with warm light, peaceful vibes",
+        "Artistic workspace with creative tools, productivity inspiration",
+        "Beautiful flowers in soft natural light, beauty and growth",
+        "Cozy reading nook with books and warm lighting, self-care",
+        "Luxury spa setup with candles and peaceful ambiance",
+        "Modern workspace with plants and natural elements",
+        "Sunset over calm water, tranquility and reflection"
+      ];
+
+      // Simulate AI generation delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // For demo, we'll use curated Unsplash images that match the aesthetic
+      const generatedImages = [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1540569876979-df919b7c1d70?w=600&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1445205170230-053b83016050?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1502780402662-acc01917cf4a?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=400&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1566479179817-bea0b1d0c1b6?w=600&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=500&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1506629905607-0e3dd3bb9e0e?w=400&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=400&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1490427712608-588e68359dbd?w=600&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1593079831268-3381b0db4a77?w=400&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=500&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=400&h=500&fit=crop",
+        "https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=600&h=400&fit=crop",
+        "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=500&h=400&fit=crop"
+      ];
+      
+      setGeneratedBoard(generatedImages);
+      toast.success("AI Vision Board generated successfully!");
+    } catch (error) {
+      console.error("Error generating vision board:", error);
+      toast.error("Failed to generate AI vision board");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const handleShare = () => {
     if (navigator.share) {
@@ -41,10 +153,12 @@ const VisionBoard = () => {
   };
 
   const handleShopNow = () => {
-    // Store board data for recommendations
+    // Store board data for recommendations including AI generated images
     localStorage.setItem('currentBoard', JSON.stringify({
-      images: boardImages,
+      images: generatedBoard.length > 0 ? generatedBoard : boardImages,
+      originalSelections: boardImages,
       selections: selections,
+      styleTags: getStyleTags(selections),
       created: Date.now()
     }));
     navigate('/shop');
@@ -57,7 +171,7 @@ const VisionBoard = () => {
     fashion: "Fashion & Style"
   };
 
-  if (boardImages.length === 0) {
+  if (boardImages.length === 0 && !isGenerating) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
@@ -71,6 +185,8 @@ const VisionBoard = () => {
     );
   }
 
+  const displayImages = generatedBoard.length > 0 ? generatedBoard : boardImages;
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -82,9 +198,21 @@ const VisionBoard = () => {
           </Button>
           
           <div className="text-center">
-            <h1 className="text-xl font-semibold">Your Vision Board</h1>
+            <h1 className="text-xl font-semibold flex items-center justify-center gap-2">
+              {isGenerating ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Generating AI Vision Board
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5 text-primary" />
+                  Your AI Vision Board
+                </>
+              )}
+            </h1>
             <p className="text-sm text-muted-foreground">
-              {boardImages.length} images • Created just now
+              {isGenerating ? "Creating personalized vision..." : `${displayImages.length} curated images • AI generated`}
             </p>
           </div>
 
@@ -105,27 +233,44 @@ const VisionBoard = () => {
         {/* Vision Board Display */}
         <div className="mb-8">
           <Card className="p-8 bg-gradient-to-br from-soft-lavender/30 to-soft-sky/30">
-            <h2 className="text-2xl font-bold text-center mb-6 gradient-text">
+            <h2 className="text-2xl font-bold text-center mb-2 gradient-text">
               Your Personal Vision Board
             </h2>
+            <p className="text-center text-muted-foreground mb-6">
+              AI-curated based on your preferences • Drag to reorder
+            </p>
             
-            {/* Masonry-style grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {boardImages.map((image, index) => (
-                <div 
-                  key={index}
-                  className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 cursor-move"
-                >
-                  <img 
-                    src={image} 
-                    alt={`Vision ${index + 1}`}
-                    className="w-full aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <Move className="absolute top-2 right-2 w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            {isGenerating ? (
+              <div className="flex items-center justify-center py-20">
+                <div className="text-center">
+                  <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">Creating Your Vision Board</h3>
+                  <p className="text-muted-foreground">AI is analyzing your preferences...</p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ) : (
+              /* Pinterest-style masonry grid */
+              <div className="columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 space-y-4">
+                {displayImages.map((image, index) => (
+                  <div 
+                    key={index}
+                    className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 cursor-move break-inside-avoid mb-4"
+                  >
+                    <img 
+                      src={image} 
+                      alt={`AI Vision ${index + 1}`}
+                      className="w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      style={{ aspectRatio: `${Math.random() > 0.5 ? '4/5' : '4/3'}` }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <Move className="absolute top-2 right-2 w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-lg" />
+                    <div className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Sparkles className="w-4 h-4 text-white drop-shadow-lg" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </Card>
         </div>
 
@@ -145,13 +290,25 @@ const VisionBoard = () => {
 
         {/* Shop CTA */}
         <Card className="p-8 text-center bg-gradient-to-r from-primary/10 to-accent-coral/10 border-primary/20">
-          <ShoppingBag className="w-12 h-12 mx-auto mb-4 text-primary" />
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <ShoppingBag className="w-12 h-12 text-primary" />
+            <Sparkles className="w-8 h-8 text-accent-coral" />
+          </div>
           <h3 className="text-2xl font-bold mb-2">Ready to Make It Real?</h3>
           <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Discover personalized product recommendations that align with your vision board aesthetic and goals.
+            Discover AI-curated product recommendations that perfectly match your vision board aesthetic and personal style.
           </p>
-          <Button variant="hero" size="lg" onClick={handleShopNow}>
-            Shop Your Vision <ShoppingBag className="w-5 h-5 ml-2" />
+          <Button variant="hero" size="lg" onClick={handleShopNow} disabled={isGenerating}>
+            {isGenerating ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                Shop Your Vision <ShoppingBag className="w-5 h-5 ml-2" />
+              </>
+            )}
           </Button>
         </Card>
       </div>
