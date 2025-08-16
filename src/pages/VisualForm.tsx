@@ -9,6 +9,9 @@ import { toast } from "sonner";
 import colorPink from "@/assets/color-pink.jpg";
 import colorBlack from "@/assets/color-black.jpg";
 import colorGreen from "@/assets/color-green.jpg";
+import colorBlue from "@/assets/color-blue.jpg";
+import colorPurple from "@/assets/color-purple.jpg";
+import colorYellow from "@/assets/color-yellow.jpg";
 import activityReading from "@/assets/activity-reading.jpg";
 import activityDancing from "@/assets/activity-dancing.jpg";
 import activityGaming from "@/assets/activity-gaming.jpg";
@@ -60,7 +63,7 @@ const questions = [
       { label: "Matcha latte", image: "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?w=400&h=300&fit=crop", tags: ["healthy", "trendy", "calming"] },
       { label: "Smoothie", image: "https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=400&h=300&fit=crop", tags: ["healthy", "fresh", "vitamins"] },
       { label: "Tea", image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=300&fit=crop", tags: ["calming", "traditional", "warm"] },
-      { label: "Energy drink", image: "https://images.unsplash.com/photo-1553282195-a4dd3d960735?w=400&h=300&fit=crop", tags: ["energy", "active", "boost"] }
+      { label: "Energy drink", image: "https://images.unsplash.com/photo-1622543925917-763c34d1a86e?w=400&h=300&fit=crop", tags: ["energy", "active", "boost"] }
     ]
   },
   {
@@ -86,9 +89,9 @@ const questions = [
       { label: "Pink", image: colorPink, tags: ["soft", "feminine", "playful"] },
       { label: "Black", image: colorBlack, tags: ["elegant", "minimalist", "classic"] },
       { label: "Green", image: colorGreen, tags: ["natural", "calming", "fresh"] },
-      { label: "Blue", image: "https://images.unsplash.com/photo-1557683316-973673baf926?w=400&h=300&fit=crop", tags: ["calming", "trustworthy", "peaceful"] },
-      { label: "Purple", image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=300&fit=crop", tags: ["creative", "mystical", "luxurious"] },
-      { label: "Yellow", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop", tags: ["bright", "happy", "energetic"] }
+      { label: "Blue", image: colorBlue, tags: ["calming", "trustworthy", "peaceful"] },
+      { label: "Purple", image: colorPurple, tags: ["creative", "mystical", "luxurious"] },
+      { label: "Yellow", image: colorYellow, tags: ["bright", "happy", "energetic"] }
     ]
   },
   {
