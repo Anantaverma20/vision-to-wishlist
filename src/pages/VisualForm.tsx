@@ -28,7 +28,7 @@ const questions = [
     color: "bg-soft-mint",
     options: [
       { label: "New shoes", image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=400&h=300&fit=crop", tags: ["fashion", "footwear", "style"] },
-      { label: "Cozy hoodie", image: "https://images.unsplash.com/photo-1556821840-3a9c6dcdb61b?w=400&h=300&fit=crop", tags: ["clothing", "comfort", "casual"] },
+      { label: "Cozy hoodie", image: "/lovable-uploads/0f9bc836-8e6f-4269-ade0-4650c95595e9.png", tags: ["clothing", "comfort", "casual"] },
       { label: "A notebook", image: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?w=400&h=300&fit=crop", tags: ["stationery", "planning", "creative"] },
       { label: "Tech gadget", image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&h=300&fit=crop", tags: ["technology", "gadgets", "modern"] },
       { label: "Jewelry", image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=300&fit=crop", tags: ["accessories", "jewelry", "elegant"] },

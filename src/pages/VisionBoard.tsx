@@ -6,10 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const VisionBoard = () => {
-  const [selections, setSelections] = useState<Record<string, string[]>>({});
+  const [selections, setSelections] = useState<Record<string, any[]>>({});
   const [boardImages, setBoardImages] = useState<string[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedBoard, setGeneratedBoard] = useState<string[]>([]);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [userFeedback, setUserFeedback] = useState<'liked' | 'disliked' | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,8 +19,8 @@ const VisionBoard = () => {
     if (saved) {
       const parsed = JSON.parse(saved);
       setSelections(parsed);
-      // Flatten all selected images
-      const allImages = Object.values(parsed).flat() as string[];
+      // Flatten all selected option images  
+      const allImages = Object.values(parsed).flat().map((option: any) => option.image);
       setBoardImages(allImages);
       
       // Auto-generate AI vision board
@@ -28,59 +30,90 @@ const VisionBoard = () => {
     }
   }, [navigate]);
 
-  const getStyleTags = (selections: Record<string, string[]>) => {
+  const getStyleTags = (selections: Record<string, any[]>) => {
     const tags = [];
     
     // Analyze user preferences to generate style tags
-    if (selections.fitness?.length > 0) {
-      tags.push("wellness", "active lifestyle", "healthy living", "motivation");
+    if (selections.want?.length > 0) {
+      const wantTags = selections.want.flatMap((option: any) => option.tags);
+      tags.push(...wantTags);
     }
-    if (selections.travel?.length > 0) {
-      tags.push("adventure", "wanderlust", "exploration", "freedom");
+    if (selections.eat?.length > 0) {
+      const eatTags = selections.eat.flatMap((option: any) => option.tags);
+      tags.push(...eatTags);
     }
-    if (selections.home?.length > 0) {
-      tags.push("minimalist", "cozy", "interior design", "peaceful");
+    if (selections.drink?.length > 0) {
+      const drinkTags = selections.drink.flatMap((option: any) => option.tags);
+      tags.push(...drinkTags);
     }
-    if (selections.fashion?.length > 0) {
-      tags.push("style", "elegance", "trendy", "aesthetic");
+    if (selections.go?.length > 0) {
+      const goTags = selections.go.flatMap((option: any) => option.tags);
+      tags.push(...goTags);
+    }
+    if (selections.color?.length > 0) {
+      const colorTags = selections.color.flatMap((option: any) => option.tags);
+      tags.push(...colorTags);
+    }
+    if (selections.activity?.length > 0) {
+      const activityTags = selections.activity.flatMap((option: any) => option.tags);
+      tags.push(...activityTags);
+    }
+    if (selections.animal?.length > 0) {
+      const animalTags = selections.animal.flatMap((option: any) => option.tags);
+      tags.push(...animalTags);
+    }
+    if (selections.season?.length > 0) {
+      const seasonTags = selections.season.flatMap((option: any) => option.tags);
+      tags.push(...seasonTags);
+    }
+    if (selections.aesthetic?.length > 0) {
+      const aestheticTags = selections.aesthetic.flatMap((option: any) => option.tags);
+      tags.push(...aestheticTags);
     }
     
-    return tags;
+    return [...new Set(tags)]; // Remove duplicates
   };
 
-  const generateAIVisionBoard = async (userSelections: Record<string, string[]>) => {
+  const generateAIVisionBoard = async (userSelections: Record<string, any[]>) => {
     setIsGenerating(true);
     try {
       const styleTags = getStyleTags(userSelections);
+      
+      // Generate prompts based on user's actual selections
       const prompts = [
-        // Core lifestyle images
-        `A beautiful ${styleTags.join(", ")} lifestyle scene, high quality, inspiring`,
-        `Elegant ${styleTags.join(", ")} aesthetic mood board style, clean composition`,
-        `Aspirational ${styleTags.join(", ")} vision, dreamy atmosphere, soft lighting`,
+        `A beautiful ${styleTags.slice(0, 4).join(", ")} lifestyle scene, high quality, inspiring`,
+        `Elegant ${styleTags.slice(0, 3).join(", ")} aesthetic mood board style, clean composition`,
+        `Aspirational ${styleTags.slice(2, 5).join(", ")} vision, dreamy atmosphere, soft lighting`,
         
-        // Category-specific images
-        ...(userSelections.fitness ? [
-          "Serene yoga studio with natural light, minimalist zen aesthetic",
-          "Fresh healthy colorful smoothie bowls and fruits, clean eating lifestyle",
-          "Modern gym equipment in bright spacious room, motivational fitness"
+        // Category-specific images based on selections
+        ...(userSelections.want ? [
+          "Stylish modern lifestyle items arranged aesthetically",
+          "Beautiful minimalist product photography setup"
         ] : []),
         
-        ...(userSelections.travel ? [
-          "Stunning mountain landscape with clear blue sky, adventure travel",
-          "Cozy café in European cobblestone street, wanderlust vibes",
-          "Pristine beach with crystal clear water, tropical paradise"
+        ...(userSelections.eat ? [
+          "Healthy colorful food photography, clean eating lifestyle",
+          "Aesthetic food flat lay with natural lighting"
         ] : []),
         
-        ...(userSelections.home ? [
-          "Scandinavian minimalist living room with plants, cozy hygge",
-          "Organized beautiful kitchen with natural materials, home inspiration",
-          "Peaceful bedroom with soft textures and natural light"
+        ...(userSelections.drink ? [
+          "Beautiful beverage photography with natural elements",
+          "Cozy café scene with aesthetic drinks"
         ] : []),
         
-        ...(userSelections.fashion ? [
-          "Elegant fashion flat lay with accessories, style inspiration",
-          "Chic wardrobe with organized clothes, fashion aesthetic",
-          "Beautiful jewelry and accessories display, luxury style"
+        ...(userSelections.go ? [
+          "Inspiring travel and adventure destinations",
+          "Beautiful peaceful places for relaxation"
+        ] : []),
+        
+        ...(userSelections.color ? [
+          "Color-coordinated aesthetic lifestyle photography",
+          "Beautiful color palette inspiration"
+        ] : []),
+        
+        ...(userSelections.activity ? [
+          "Active lifestyle and hobby inspiration",
+          "Creative workspace and activity setups"
         ] : []),
         
         // Universal inspiration images
@@ -89,15 +122,13 @@ const VisionBoard = () => {
         "Artistic workspace with creative tools, productivity inspiration",
         "Beautiful flowers in soft natural light, beauty and growth",
         "Cozy reading nook with books and warm lighting, self-care",
-        "Luxury spa setup with candles and peaceful ambiance",
-        "Modern workspace with plants and natural elements",
-        "Sunset over calm water, tranquility and reflection"
+        "Luxury spa setup with candles and peaceful ambiance"
       ];
 
       // Simulate AI generation delay
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // For demo, we'll use curated Unsplash images that match the aesthetic
+      // For demo, use curated images that match user preferences
       const generatedImages = [
         "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=600&fit=crop",
         "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=500&fit=crop",
@@ -126,6 +157,7 @@ const VisionBoard = () => {
       ];
       
       setGeneratedBoard(generatedImages);
+      setShowFeedback(true); // Show feedback after generation
       toast.success("AI Vision Board generated successfully!");
     } catch (error) {
       console.error("Error generating vision board:", error);
@@ -164,11 +196,35 @@ const VisionBoard = () => {
     navigate('/shop');
   };
 
+  const handleFeedback = (liked: boolean) => {
+    setUserFeedback(liked ? 'liked' : 'disliked');
+    setShowFeedback(false);
+    
+    if (liked) {
+      toast.success("Great! We're glad you love your vision board! 😊");
+    } else {
+      toast.success("Thanks for the feedback! We'll improve our AI generation. 🙏");
+      // In a real app, you might regenerate or ask for more specific feedback
+    }
+    
+    // Store feedback for analytics
+    localStorage.setItem('boardFeedback', JSON.stringify({
+      liked,
+      timestamp: Date.now(),
+      boardId: Date.now() // In real app would be actual board ID
+    }));
+  };
+
   const categoryNames: Record<string, string> = {
-    fitness: "Fitness & Wellness",
-    travel: "Travel & Adventure", 
-    home: "Home & Living",
-    fashion: "Fashion & Style"
+    want: "What I Want",
+    eat: "Food Cravings", 
+    drink: "Favorite Drinks",
+    go: "Places to Go",
+    color: "Favorite Colors",
+    activity: "Activities I Love",
+    animal: "Favorite Animals",
+    season: "Favorite Season",
+    aesthetic: "My Aesthetic"
   };
 
   if (boardImages.length === 0 && !isGenerating) {
@@ -319,15 +375,59 @@ const VisionBoard = () => {
           </Card>
         </div>
 
+        {/* Feedback Modal */}
+        {showFeedback && !isGenerating && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <Card className="p-8 max-w-md w-full text-center bg-white">
+              <div className="mb-6">
+                <Sparkles className="w-16 h-16 text-primary mx-auto mb-4" />
+                <h3 className="text-2xl font-bold mb-2">How do you like your vision board?</h3>
+                <p className="text-muted-foreground">Your feedback helps us improve our AI generation</p>
+              </div>
+              
+              <div className="flex gap-6 justify-center">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => handleFeedback(true)}
+                  className="flex-col h-auto py-4 px-8 hover:bg-green-50 hover:border-green-300"
+                >
+                  <span className="text-4xl mb-2">👍</span>
+                  <span className="text-sm font-medium">Love it!</span>
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => handleFeedback(false)}
+                  className="flex-col h-auto py-4 px-8 hover:bg-red-50 hover:border-red-300"
+                >
+                  <span className="text-4xl mb-2">👎</span>
+                  <span className="text-sm font-medium">Not quite</span>
+                </Button>
+              </div>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowFeedback(false)}
+                className="mt-4 text-muted-foreground"
+              >
+                Skip feedback
+              </Button>
+            </Card>
+          </div>
+        )}
+
         {/* Categories Summary */}
         <div className="mb-8">
           <h3 className="text-lg font-semibold mb-4">Your Vision Categories</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {Object.entries(selections).map(([categoryId, images]) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {Object.entries(selections).map(([categoryId, options]) => (
               <Card key={categoryId} className="p-4 text-center">
-                <h4 className="font-medium mb-2">{categoryNames[categoryId]}</h4>
-                <p className="text-2xl font-bold text-primary">{images.length}</p>
-                <p className="text-xs text-muted-foreground">images selected</p>
+                <h4 className="font-medium mb-2 text-sm">{categoryNames[categoryId]}</h4>
+                <p className="text-2xl font-bold text-primary">{options.length}</p>
+                <p className="text-xs text-muted-foreground">selections</p>
               </Card>
             ))}
           </div>
